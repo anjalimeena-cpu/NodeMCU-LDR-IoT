@@ -18,7 +18,7 @@
 
 const char* ssid = "YOUR_SSID";
 const char* password = "YOUR_PASS";
-const char* THINGSPEAK_APIKEY = "YOUR_THINGSPEAK_APIKEY";
+const char* THINGSPEAK_APIKEY = "41JJFVKQADXYOKZB";
 
 const int LDR_PIN = A0;   // NodeMCU analog input
 unsigned long lastSend = 0;
