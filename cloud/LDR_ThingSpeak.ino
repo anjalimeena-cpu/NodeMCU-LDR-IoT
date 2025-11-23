@@ -16,8 +16,8 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASS";
+const char* ssid = "One Plus Nord 3 5G";
+const char* password = "12345678";
 const char* THINGSPEAK_APIKEY = "41JJFVKQADXYOKZB";
 
 const int LDR_PIN = A0;   // NodeMCU analog input
