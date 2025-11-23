@@ -64,6 +64,10 @@ Dark → lower voltage → lower A0 reading
 NodeMCU has a **10-bit ADC** →  
 0 = 0V, 1023 = 3.3V.
 
+📸 Hardware Setup Images
+![Circuit Setup](https://github.com/anjalimeena-cpu/NodeMCU-LDR-IoT/blob/main/Wiring.jpeg?raw=true)
+![NodeMCU Closeup](https://github.com/anjalimeena-cpu/NodeMCU-LDR-IoT/blob/main/Circuit%20.jpeg?raw=true)
+
 ### 🔹 **Why ThingSpeak is used?**  
 ThingSpeak acts as a:
 - Data receiver  
@@ -83,6 +87,13 @@ No custom web server required.
 5. Replace it in the code  
 
 ThingSpeak automatically graphs the LDR readings.
+
+ThingSpeak Graph Screenshot
+![ThingSpeak Live Graph](https://github.com/anjalimeena-cpu/NodeMCU-LDR-IoT/blob/main/Thingspeak%20graph%20(2).png?raw=true)
+![Serial Monitor Readings](https://github.com/anjalimeena-cpu/NodeMCU-LDR-IoT/blob/main/Serial%20monitor%20readings.png?raw=true)
+
+**Demo Video**
+[Click Here to Watch Demo Video](https://drive.google.com/drive/folders/1_EMLpwNIDCjZd_DRcHNTEctpvK_b7AYE?usp=drive_link)
 
 ---
 
@@ -154,3 +165,5 @@ void loop() {
 
   delay(15000);
 }
+
+```md
