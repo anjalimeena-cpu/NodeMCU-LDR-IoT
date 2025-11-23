@@ -14,64 +14,67 @@
 */
 
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 
-const char* ssid = "One Plus Nord 3 5G";
+const char* ssid = "OnePlus";
 const char* password = "12345678";
-const char* THINGSPEAK_APIKEY = "41JJFVKQADXYOKZB";
 
-const int LDR_PIN = A0;   // NodeMCU analog input
-unsigned long lastSend = 0;
-const unsigned long sendInterval = 10000UL; // 10 seconds (increase to 15000 if ThingSpeak rate limits)
+const char* server = "api.thingspeak.com";
+String apiKey = "3W9I7D66JOZ64JD1";
+
+int ldrPin = A0;
+int threshold = 540;   // <--- Based on your values
+
+WiFiClient client;
 
 void setup() {
   Serial.begin(115200);
-  delay(100);
-  pinMode(LDR_PIN, INPUT);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi");
-  unsigned long start = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - start < 15000) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println();
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("WiFi connected.");
-    Serial.print("IP: "); Serial.println(WiFi.localIP());
-  } else {
-    Serial.println("WiFi connection failed — proceeding with simulated values (no cloud upload).");
-  }
-}
+  delay(1000);
 
-float readLDR() {
-  int raw = analogRead(LDR_PIN);       // 0..1023 on NodeMCU A0
-  float normalized = (raw / 1023.0) * 100.0; // convert to 0–100 %
-  return normalized;
+  Serial.println("Connecting to WiFi...");
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi Connected!");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
-  unsigned long now = millis();
-  if (now - lastSend >= sendInterval) {
-    lastSend = now;
+  int ldrValue = analogRead(ldrPin);
+  Serial.print("LDR Value: ");
+  Serial.println(ldrValue);
 
-    float ldrValue = readLDR();
-    bool simulated = false;
+  int darkStatus = (ldrValue < threshold) ? 1 : 0;
 
-    if (ldrValue < 1.0 || ldrValue > 99.0) {
-      // simulated fallback
-      ldrValue = 40.0 + random(-1000,1000)/100.0; // ~30–50 %
-      simulated = true;
-      Serial.println("Using simulated LDR value (sensor extreme/no sensor).");
-    } else {
-      Serial.println("Real LDR reading OK.");
-    }
+  if (client.connect(server, 80)) {
+    String postStr = apiKey;
+    postStr += "&field1=";
+    postStr += String(ldrValue);
+    postStr += "&field2=";
+    postStr += String(darkStatus);
+    postStr += "\r\n\r\n";
 
-    Serial.print("LDR (0-100): ");
-    Serial.println(ldrValue);
+    client.print("POST /update HTTP/1.1\n");
+    client.print("Host: api.thingspeak.com\n");
+    client.print("Connection: close\n");
+    client.print("X-THINGSPEAKAPIKEY: " + apiKey + "\n");
+    client.print("Content-Type: application/x-www-form-urlencoded\n");
+    client.print("Content-Length: ");
+    client.print(postStr.length());
+    client.print("\n\n");
+    client.print(postStr);
+  }
 
-    if (WiFi.status() == WL_CONNECTED) {
-      HTTPClient http;
-      String url = String("http://api.thingspeak.com/update?api_key=") + THINGSPEAK_APIKEY +
-                   "&field1=" + String(ldrValue
+  client.stop();
+
+  Serial.println("Data sent to ThingSpeak!");
+  Serial.println("-------------------------");
+
+  delay(15000);
+}
