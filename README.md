@@ -86,7 +86,7 @@ ThingSpeak automatically graphs the LDR readings.
 
 ---
 
-## 💻 Final Code (Fully Working, Ready to Upload)
+## 💻 Arduino Code 
 
 ```cpp
 #include <ESP8266WiFi.h>
@@ -154,14 +154,3 @@ void loop() {
 
   delay(15000);
 }
-
-📸 Hardware Setup Images
-![Circuit Setup](images/circuit.jpg)
-![LDR Placement](images/ldr.jpg)
-![NodeMCU Closeup](images/nodemcu.jpg)
-
-📊 ThingSpeak Graph Screenshot
-![ThingSpeak Live Graph](images/thingspeak_graph.jpg)
-
-🎥 Demo Video
-[Click Here to watch the Vedio]()
